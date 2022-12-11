@@ -1,0 +1,42 @@
+### user define
+# editor
+.vscode
+.VSCodeCounter
+
+## docs
+doc
+logs
+data
+### template
+# Logs
+logs
+*.log
+
+## tmp
+tmp
+
+# Dependency directories
+node_modules/
+./node_modules
+
+# .env
+.env
+
+test/result*
+local-schedule.js
+
+coverage/
+
+./test/script.js
+*DotImage.json
+
+dist/
+
+# debug file
+*.cpuprofile
+*.heapsnapshot
+
+.idea
+
+
+
