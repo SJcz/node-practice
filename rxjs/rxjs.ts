@@ -9,7 +9,7 @@ export type Observer = {
  * observer 对象一般只提供三个函数, next, complete, error
  * 为了让 observer 更加健壮, 需要对其进行包装, 也就是 SafeObserver
  */
-class SafeObserver {
+export class SafeObserver {
 	/**观察者对象 */
 	private observer: Observer
 	/**是否取消订阅了 */
@@ -51,40 +51,40 @@ class SafeObserver {
 	}
 }
 
-{ 
-	// 简单的 observable 函数实现
-	function simpleObervable(observer: Observer) { 
-		if (typeof observer === 'function') observer = { next: observer }
-		const safeObserver = new SafeObserver(observer)
+// { 
+// 	// 简单的 observable 函数实现
+// 	function simpleObervable(observer: Observer) { 
+// 		if (typeof observer === 'function') observer = { next: observer }
+// 		const safeObserver = new SafeObserver(observer)
 		
-		let i = 0
-		const intercalId = setInterval(() => { 
-			if (i > 10) { 
-				safeObserver.complete()
-				clearInterval(intercalId)
-			}
-			safeObserver.next(i++)
-		}, 100)
+// 		let i = 0
+// 		const intercalId = setInterval(() => { 
+// 			if (i > 10) { 
+// 				safeObserver.complete()
+// 				clearInterval(intercalId)
+// 			}
+// 			safeObserver.next(i++)
+// 		}, 100)
 	
-		safeObserver.onsub = () => { 
-			clearInterval(intercalId)
-		}
+// 		safeObserver.onsub = () => { 
+// 			clearInterval(intercalId)
+// 		}
 	
-		return () => { 
-			safeObserver.unsubscribe()
-		}
-	}
+// 		return () => { 
+// 			safeObserver.unsubscribe()
+// 		}
+// 	}
 	
-	const unsubHandle = simpleObervable({
-		next: (data) => console.log('data', data),
-		complete: () => console.log('complete'),
-		error: () => console.log('error'),
-	})
+// 	const unsubHandle = simpleObervable({
+// 		next: (data) => console.log('data', data),
+// 		complete: () => console.log('complete'),
+// 		error: () => console.log('error'),
+// 	})
 	
-	setTimeout(() => { 
-		unsubHandle()
-	}, 500)
-}
+// 	setTimeout(() => { 
+// 		unsubHandle()
+// 	}, 500)
+// }
 
 /**
  * observalble 可以再更适用一点, 使用类来定义
@@ -94,16 +94,16 @@ class SafeObserver {
  */
 export class MyObservable { 
 	// 核心, 如何生产数据的函数, 这个函数里面需要生产数据给观察者使用
-	private howTowProduceData: (observer: Observer) => () => void
+	private howTowProduceData: (observer: SafeObserver) => () => void
 	
-	constructor(howTowProduceData: (observer: Observer) => () => void) { 
+	constructor(howTowProduceData: (observer: SafeObserver) => () => void) { 
 		this.howTowProduceData = howTowProduceData
 	}
 
 	subscribe(observer: Observer) { 
 		if (typeof observer === 'function') observer = { next: observer }
 		const safeObserver = new SafeObserver(observer)
-		safeObserver.onsub = this.howTowProduceData(observer)
+		safeObserver.onsub = this.howTowProduceData(safeObserver)
 
 		return () => { 
 			safeObserver.unsubscribe()
