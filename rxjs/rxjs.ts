@@ -96,6 +96,7 @@ export class MyObservable {
 	// 核心, 如何生产数据的函数, 这个函数里面需要生产数据给观察者使用
 	private howTowProduceData: (observer: SafeObserver) => () => void
 	
+	
 	constructor(howTowProduceData: (observer: SafeObserver) => () => void) { 
 		this.howTowProduceData = howTowProduceData
 	}
@@ -108,6 +109,11 @@ export class MyObservable {
 		return () => { 
 			safeObserver.unsubscribe()
 		}
+	}
+	
+	/**静态方法, 用于创建一个 MyObservable 实例 */
+	static create(howTowProduceData: (observer: SafeObserver) => () => void) {
+		return new MyObservable(howTowProduceData)
 	}
 }
 
