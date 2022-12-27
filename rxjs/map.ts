@@ -13,24 +13,26 @@ export function map(observable: MyObservable, project: (data: any) => any) {
 }
 
 //  test
-const observable = new MyObservable((observer: SafeObserver) => { 
-	let i = 0
-	const intervalId = setInterval(() => { 
-		if (i > 10) { 
-			observer.complete()
+if (require.main === module) { 
+	const observable = new MyObservable((observer: SafeObserver) => { 
+		let i = 0
+		const intervalId = setInterval(() => { 
+			if (i > 10) { 
+				observer.complete()
+			}
+			observer.next(i++)
+		}, 100)
+		
+		return () => { 
+			clearInterval(intervalId)
 		}
-		observer.next(i++)
-	}, 100)
-  
-	return () => { 
-		clearInterval(intervalId)
+	})
+	
+	const observer = {
+		next: data => console.log('map data', data),
+		complete: () => console.log('map complete'),
+		error: (e) => console.log(e),
 	}
-})
-
-const observer = {
-	next: data => console.log('map data', data),
-	complete: () => console.log('map complete'),
-	error: (e) => console.log(e),
+	
+	map(observable, (i: number) => i * 10).subscribe(observer)
 }
-
-map(observable, (i: number) => i * 10).subscribe(observer)

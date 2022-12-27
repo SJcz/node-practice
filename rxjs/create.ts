@@ -4,27 +4,29 @@ import { MyObservable, SafeObserver } from './rxjs'
 
 
 //  test
-const observable =  MyObservable.create((observer: SafeObserver) => { 
-	let i = 0
-	const intervalId = setInterval(() => { 
-		if (i > 10) { 
-			observer.complete()
+if (require.main === module) { 
+	const observable =  MyObservable.create((observer: SafeObserver) => { 
+		let i = 0
+		const intervalId = setInterval(() => { 
+			if (i > 10) { 
+				observer.complete()
+			}
+			observer.next(i++)
+		}, 100)
+		
+		return () => { 
+			clearInterval(intervalId)
 		}
-		observer.next(i++)
-	}, 100)
-  
-	return () => { 
-		clearInterval(intervalId)
+	})
+	
+	const observer = {
+		next: data => console.log('map data', data),
+		complete: () => console.log('map complete'),
+		error: (e) => console.log(e),
 	}
-})
-
-const observer = {
-	next: data => console.log('map data', data),
-	complete: () => console.log('map complete'),
-	error: (e) => console.log(e),
+	
+	reduce(observable, (cur: number, data: number) => { 
+		cur += data
+		return cur
+	}).subscribe(observer)
 }
-
-reduce(observable, (cur: number, data: number) => { 
-	cur += data
-	return cur
-}).subscribe(observer)
