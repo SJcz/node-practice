@@ -1,4 +1,4 @@
-type TreeNode = {
+export type TreeNode = {
     value: number
     left: TreeNode,
     right: TreeNode
