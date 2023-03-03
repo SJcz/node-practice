@@ -21,7 +21,8 @@ module.exports = {
 		'@typescript-eslint/no-tabs': 'off',
 		indent: [
 			'warn',
-			'tab'
+			'tab',
+			{ SwitchCase: 1}
 			// 强制统一缩进
 		],
 		quotes: [
