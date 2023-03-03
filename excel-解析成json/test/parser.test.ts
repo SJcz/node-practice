@@ -16,6 +16,7 @@ describe('测试 excel 解析器', () => {
 		for (const item of basicData) {
 			expect(item).toHaveProperty('student_name', item.学生姓名)
 			expect(item).toHaveProperty('phone', item.家长电话)
+			expect(item).toHaveProperty('row_num') // excel 第几行
 		}
 	})
 })
